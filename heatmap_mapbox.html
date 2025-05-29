@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OpenLayers Heatmap</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+  <style>
+    html, body, #map {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script type="text/javascript">
+  const map = new ol.Map({
+    target: 'map',
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()  // OpenStreetMap as basemap
+      }),
+      new ol.layer.Heatmap({
+        source: new ol.source.Vector({
+          url: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson', // use your own or download locally
+          format: new ol.format.GeoJSON()
+        }),
+        blur: 15,
+        radius: 8,
+        weight: function (feature) {
+          // use magnitude to influence intensity (optional)
+          return feature.get('mag') || 0.5;
+        }
+      })
+    ],
+    view: new ol.View({
+      center: ol.proj.fromLonLat([-120, 37]),
+      zoom: 4
+    })
+  });
+</script>
+</body>
+</html>
